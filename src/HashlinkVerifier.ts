@@ -1,5 +1,5 @@
-import { Hashlink } from 'hashlink/Hashlink';
-import * as codecs from '../node_modules/hashlink/codecs';
+import { Hashlink } from './hashlink/Hashlink';
+import * as codecs from './hashlink/codecs';
 
 export interface HashlinkModel {
   hashName: string;
