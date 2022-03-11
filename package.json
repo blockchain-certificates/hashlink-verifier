@@ -1,0 +1,51 @@
+{
+  "name": "@blockcerts/hashlink-verifier",
+  "version": "0.0.0-dev",
+  "description": "Handling hashlinks in Blockcerts",
+  "main": "dist/HashlinkVerifier.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dts:bundle": "dts-bundle-generator -o ./dist/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
+    "build": "rollup -c && npm run dts:bundle",
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blockchain-certificates/hashlink-verifier.git"
+  },
+  "keywords": [
+    "hashlink",
+    "verifiable",
+    "credentials",
+    "blockcerts",
+    "blockchain",
+    "certificates"
+  ],
+  "author": "Julien Fraichot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blockchain-certificates/hashlink-verifier/issues"
+  },
+  "homepage": "https://github.com/blockchain-certificates/hashlink-verifier#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "dts-bundle-generator": "^6.5.0",
+    "eslint": "^7.32.0",
+    "eslint-config-semistandard": "^16.0.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "rollup": "^2.70.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-polyfill-node": "^0.8.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "hashlink": "^0.12.1"
+  }
+}
