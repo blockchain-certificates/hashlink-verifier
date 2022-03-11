@@ -1,4 +1,4 @@
-import { Hashlink } from 'hashlink';
+import { Hashlink } from 'hashlink/Hashlink';
 import * as codecs from '../node_modules/hashlink/codecs';
 
 export interface HashlinkModel {
@@ -31,7 +31,7 @@ export class HashlinkVerifier {
 
   async decode (hashlink: string, onHashlinkUrlDecoded?: (url: string) => void): Promise<HashlinkModel> {
     const decodedHashlink: HashlinkModel = await this.hl.decode({ hashlink });
-    console.log('hashlink decoded', decodedHashlink);
+    // console.log('hashlink decoded', decodedHashlink);
     if (!decodedHashlink.meta && !decodedHashlink.meta.url?.length) {
       throw new Error('unparseable document, no url provided as meta data');
     }
@@ -83,7 +83,6 @@ export class HashlinkVerifier {
   private async getSourceUrlFromHashlink (hashlink: string): Promise<string> {
     let decodedHashlink: HashlinkModel;
     if (this.hashlinkTable[hashlink]) {
-      console.log('found hashlink in table');
       decodedHashlink = this.hashlinkTable[hashlink];
     } else {
       decodedHashlink = await this.decode(hashlink);
