@@ -8,6 +8,7 @@
     "dts:bundle": "dts-bundle-generator -o ./dist/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
     "build": "rollup -c && npm run dts:bundle",
     "lint": "eslint . --ext .ts",
+    "prepare": "husky install",
     "test": "npm run test"
   },
   "repository": {
