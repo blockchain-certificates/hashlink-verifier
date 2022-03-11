@@ -7,14 +7,14 @@ export interface HashlinkModel {
   meta?: {
     url?: string[];
     'content-type'?: string;
-  }
+  };
 }
 
 export class HashlinkVerifier {
   private readonly hl: typeof Hashlink;
   private hashlinkTable: {[ hashlink: string ]: HashlinkModel } = {}; // keep decoded hashlinks in memory
 
-  constructor() {
+  constructor () {
     this.hl = new Hashlink();
     this.hl.use(new codecs.MultihashSha2256());
     this.hl.use(new codecs.MultihashBlake2b64());
@@ -37,7 +37,7 @@ export class HashlinkVerifier {
     }
     this.hashlinkTable[hashlink] = decodedHashlink;
     const sourceUrl = decodedHashlink.meta.url[0];
-    onHashlinkUrlDecoded && onHashlinkUrlDecoded(sourceUrl);
+    onHashlinkUrlDecoded?.(sourceUrl);
     return decodedHashlink;
   }
 
@@ -61,8 +61,10 @@ export class HashlinkVerifier {
     const sourceUrl = await this.getSourceUrlFromHashlink(hashlink);
     let imageData;
     await fetch(sourceUrl)
-      .then(response => response.text())
-      .then(data => imageData = data);
+      .then(async response => await response.text())
+      .then(data => {
+        imageData = data;
+      });
 
     const textEncoder = new TextEncoder();
 
