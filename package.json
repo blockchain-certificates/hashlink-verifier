@@ -33,6 +33,9 @@
     "url": "https://github.com/blockchain-certificates/hashlink-verifier/issues"
   },
   "homepage": "https://github.com/blockchain-certificates/hashlink-verifier#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/plugin-transform-runtime": "^7.17.0",
