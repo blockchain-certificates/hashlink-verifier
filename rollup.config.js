@@ -5,11 +5,11 @@ import polyfill from 'rollup-plugin-polyfill-node';
 
 export default [
   {
-    input: `src/HashlinkVerifier.ts`,
+    input: 'src/HashlinkVerifier.ts',
     output: [
       {
-        file: `dist/HashlinkVerifier.js`,
-        format: 'cjs'
+        file: 'dist/HashlinkVerifier.js',
+        format: 'esm'
       }
     ],
     plugins: [

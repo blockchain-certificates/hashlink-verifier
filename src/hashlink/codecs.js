@@ -6,7 +6,7 @@
 import * as base58 from '../base58-universal/main';
 import {blake2b} from 'blakejs';
 import crypto from './crypto.js';
-import {TextDecoder, stringToUint8Array} from './util.js';
+import {stringToUint8Array} from './util.js';
 
 class MultihashSha2256 {
   /**

@@ -1,7 +1,3 @@
-// Node.js TextDecoder/TextEncoder
-import {TextDecoder, TextEncoder} from 'util';
-export {TextDecoder, TextEncoder};
-
 export function stringToUint8Array(data) {
   if(typeof data === 'string') {
     // convert data to Uint8Array

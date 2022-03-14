@@ -4,7 +4,7 @@
 'use strict';
 
 import * as cbor from 'borc';
-import {TextDecoder, stringToUint8Array} from './util.js';
+import {stringToUint8Array} from './util.js';
 
 export class Hashlink {
   /**
