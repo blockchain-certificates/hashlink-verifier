@@ -4,7 +4,7 @@
 'use strict';
 
 import * as cbor from 'borc';
-import { stringToUint8Array } from './util.js';
+import { stringToUint8Array } from './util';
 import { Codec } from './codecs';
 import { HashlinkModel } from '../models/Hashlink';
 
