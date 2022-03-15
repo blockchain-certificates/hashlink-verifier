@@ -6,7 +6,7 @@
 import {
   encode as _encode,
   decode as _decode
-} from './baseN.js';
+} from './baseN';
 
 // base58 characters (Bitcoin alphabet)
 function getAlphabet (): string {
