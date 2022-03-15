@@ -1,17 +1,9 @@
 import { Hashlink } from './hashlink/Hashlink';
 import * as codecs from './hashlink/codecs';
-
-export interface HashlinkModel {
-  hashName: string;
-  hashValue: Uint8Array;
-  meta?: {
-    url?: string[];
-    'content-type'?: string;
-  };
-}
+import { HashlinkModel } from './models/Hashlink';
 
 export class HashlinkVerifier {
-  private readonly hl: typeof Hashlink;
+  private readonly hl: Hashlink;
   private hashlinkTable: {[ hashlink: string ]: HashlinkModel } = {}; // keep decoded hashlinks in memory
 
   constructor () {

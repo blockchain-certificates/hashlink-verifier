@@ -2,11 +2,13 @@
   "name": "@blockcerts/hashlink-verifier",
   "version": "0.0.0-dev",
   "description": "Handling hashlinks in Blockcerts",
-  "main": "dist/HashlinkVerifier.js",
+  "main": "lib/cjs/HashlinkVerifier.js",
+  "module": "lib/esm/HashlinkVerifier.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dts:bundle": "dts-bundle-generator -o ./dist/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
-    "build": "rollup -c && npm run dts:bundle",
+    "compile": "npm run clean:build && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && npm run dts:bundle",
+    "clean:build": "rimraf lib",
+    "dts:bundle": "dts-bundle-generator -o ./lib/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
     "test": "jest",
@@ -40,7 +42,6 @@
     "@babel/core": "^7.17.5",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
-    "@rollup/plugin-commonjs": "^21.0.2",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
@@ -56,15 +57,16 @@
     "eslint-plugin-promise": "^5.2.0",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
-    "rollup": "^2.70.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-polyfill-node": "^0.8.0",
-    "rollup-plugin-typescript": "^1.0.1",
     "semantic-release": "^19.0.2",
     "ts-jest": "^27.1.3",
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "blakejs": "^1.1.1",
+    "borc": "^2.1.2",
+    "isomorphic-webcrypto": "^1.6.2"
+  },
+  "peerDependencies": {
     "blakejs": "^1.1.1",
     "borc": "^2.1.2",
     "isomorphic-webcrypto": "^1.6.2"

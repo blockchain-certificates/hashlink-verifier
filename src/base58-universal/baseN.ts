@@ -42,17 +42,17 @@ const _reverseAlphabets = {};
  *
  * @return {string} the baseN-encoded output string.
  */
-export function encode(input, alphabet, maxline) {
-  if(!(input instanceof Uint8Array)) {
+export function encode (input: Uint8Array, alphabet: string, maxline: number): string {
+  if (!(input instanceof Uint8Array)) {
     throw new TypeError('"input" must be a Uint8Array.');
   }
-  if(typeof alphabet !== 'string') {
+  if (typeof alphabet !== 'string') {
     throw new TypeError('"alphabet" must be a string.');
   }
-  if(maxline !== undefined && typeof maxline !== 'number') {
+  if (maxline !== undefined && typeof maxline !== 'number') {
     throw new TypeError('"maxline" must be a number.');
   }
-  if(input.length === 0) {
+  if (input.length === 0) {
     return '';
   }
 
@@ -62,30 +62,30 @@ export function encode(input, alphabet, maxline) {
   const base = alphabet.length;
   const first = alphabet.charAt(0);
   const digits = [0];
-  for(i = 0; i < input.length; ++i) {
+  for (i = 0; i < input.length; ++i) {
     let carry = input[i];
-    for(let j = 0; j < digits.length; ++j) {
+    for (let j = 0; j < digits.length; ++j) {
       carry += digits[j] << 8;
       digits[j] = carry % base;
       carry = (carry / base) | 0;
     }
 
-    while(carry > 0) {
+    while (carry > 0) {
       digits.push(carry % base);
       carry = (carry / base) | 0;
     }
   }
 
   // deal with leading zeros
-  for(i = 0; input[i] === 0 && i < input.length - 1; ++i) {
+  for (i = 0; input[i] === 0 && i < input.length - 1; ++i) {
     output += first;
   }
   // convert digits to a string
-  for(i = digits.length - 1; i >= 0; --i) {
+  for (i = digits.length - 1; i >= 0; --i) {
     output += alphabet[digits[i]];
   }
 
-  if(maxline) {
+  if (maxline) {
     const regex = new RegExp('.{1,' + maxline + '}', 'g');
     output = output.match(regex).join('\r\n');
   }
@@ -101,22 +101,22 @@ export function encode(input, alphabet, maxline) {
  *
  * @return {Uint8Array} the decoded bytes in a Uint8Array.
  */
-export function decode(input, alphabet) {
-  if(typeof input !== 'string') {
+export function decode (input: string, alphabet: string): Uint8Array {
+  if (typeof input !== 'string') {
     throw new TypeError('"input" must be a string.');
   }
-  if(typeof alphabet !== 'string') {
+  if (typeof alphabet !== 'string') {
     throw new TypeError('"alphabet" must be a string.');
   }
-  if(input.length === 0) {
+  if (input.length === 0) {
     return new Uint8Array();
   }
 
   let table = _reverseAlphabets[alphabet];
-  if(!table) {
+  if (!table) {
     // compute reverse alphabet
     table = _reverseAlphabets[alphabet] = [];
-    for(let i = 0; i < alphabet.length; ++i) {
+    for (let i = 0; i < alphabet.length; ++i) {
       table[alphabet.charCodeAt(i)] = i;
     }
   }
@@ -127,27 +127,27 @@ export function decode(input, alphabet) {
   const base = alphabet.length;
   const first = alphabet.charAt(0);
   const bytes = [0];
-  for(let i = 0; i < input.length; i++) {
+  for (let i = 0; i < input.length; i++) {
     const value = table[input.charCodeAt(i)];
-    if(value === undefined) {
+    if (value === undefined) {
       return;
     }
 
     let carry = value;
-    for(let j = 0; j < bytes.length; ++j) {
+    for (let j = 0; j < bytes.length; ++j) {
       carry += bytes[j] * base;
       bytes[j] = carry & 0xff;
       carry >>= 8;
     }
 
-    while(carry > 0) {
+    while (carry > 0) {
       bytes.push(carry & 0xff);
       carry >>= 8;
     }
   }
 
   // deal with leading zeros
-  for(let k = 0; input[k] === first && k < input.length - 1; ++k) {
+  for (let k = 0; input[k] === first && k < input.length - 1; ++k) {
     bytes.push(0);
   }
 

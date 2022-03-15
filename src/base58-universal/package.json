@@ -18,11 +18,11 @@
   },
   "license": "BSD-3-Clause",
   "main": "index.js",
-  "module": "main.js",
+  "module": "main.ts",
   "files": [
-    "baseN.js",
+    "baseN.ts",
     "index.js",
-    "main.js"
+    "main.ts"
   ],
   "dependencies": {
     "esm": "^3.2.25"
