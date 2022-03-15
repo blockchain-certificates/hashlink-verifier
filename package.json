@@ -65,5 +65,10 @@
     "blakejs": "^1.1.1",
     "borc": "^2.1.2",
     "isomorphic-webcrypto": "^1.6.2"
+  },
+  "peerDependencies": {
+    "blakejs": "^1.1.1",
+    "borc": "^2.1.2",
+    "isomorphic-webcrypto": "^1.6.2"
   }
 }
