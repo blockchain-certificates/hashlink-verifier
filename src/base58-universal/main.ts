@@ -9,15 +9,14 @@ import {
 } from './baseN.js';
 
 // base58 characters (Bitcoin alphabet)
-const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-function getAlphabet () {
+function getAlphabet (): string {
   return '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 }
 
-export function encode(input, maxline) {
+export function encode (input: Uint8Array, maxline?: number): string {
   return _encode(input, getAlphabet(), maxline);
 }
 
-export function decode(input) {
+export function decode (input: string): Uint8Array {
   return _decode(input, getAlphabet());
 }

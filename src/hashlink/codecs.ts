@@ -4,18 +4,27 @@
 'use strict';
 
 import * as base58 from '../base58-universal/main';
-import {blake2b} from 'blakejs';
-import crypto from './crypto.js';
-import {stringToUint8Array} from './util.js';
+import { blake2b } from 'blakejs';
+import crypto from './crypto';
+import { stringToUint8Array } from './util.js';
 
-class MultihashSha2256 {
+export abstract class Codec {
+  identifier: Uint8Array;
+  algorithm: string;
+  name: string;
+  abstract encode (input: Uint8Array): Promise<Uint8Array>;
+  abstract decode (input: Uint8Array): Uint8Array;
+}
+
+class MultihashSha2256 extends Codec {
   /**
    * Creates a new MultihashSha2256 data codec.
    *
    * @returns {MultihashSha2256} A MultihashSha2256 used to encode and decode
    *   Multihash SHA-2 256-bit values.
    */
-  constructor() {
+  constructor () {
+    super();
     this.identifier = new Uint8Array([0x12, 0x20]);
     this.algorithm = 'mh-sha2-256';
     this.name = 'sha2-256';
@@ -29,9 +38,9 @@ class MultihashSha2256 {
    *
    * @returns {Uint8Array} The output of the encode function.
    */
-  async encode(input) {
+  async encode (input: Uint8Array): Promise<Uint8Array> {
     const sha2256 = new Uint8Array(
-      await crypto.subtle.digest({name: 'SHA-256'}, input));
+      await crypto.subtle.digest({ name: 'SHA-256' }, input));
     const mhsha2256 = new Uint8Array(
       sha2256.byteLength + this.identifier.byteLength);
 
@@ -41,19 +50,20 @@ class MultihashSha2256 {
     return mhsha2256;
   }
 
-  decode(input) {
+  decode (input: Uint8Array): Uint8Array {
     return input.slice(this.identifier.length);
   }
 }
 
-class MultihashBlake2b64 {
+class MultihashBlake2b64 extends Codec {
   /**
    * Creates a new MultihashBlake2b64 data codec.
    *
    * @returns {MultihashBlake2b64} A MultihashBlake2b64 used to encode and
    *   decode Multihash Blake2b 64-bit values.
    */
-  constructor() {
+  constructor () {
+    super();
     this.identifier = new Uint8Array([0xb2, 0x08, 0x08]);
     this.algorithm = 'mh-blake2b-64';
     this.name = 'blake2b-64';
@@ -67,7 +77,7 @@ class MultihashBlake2b64 {
    *
    * @returns {Uint8Array} The output of the encode function.
    */
-  async encode(input) {
+  async encode (input: Uint8Array): Promise<Uint8Array> {
     const blake2b64 = blake2b(input, null, 8);
     const mhblake2b64 = new Uint8Array(
       blake2b64.byteLength + this.identifier.byteLength);
@@ -78,19 +88,20 @@ class MultihashBlake2b64 {
     return mhblake2b64;
   }
 
-  decode(input) {
+  decode (input: Uint8Array): Uint8Array {
     return input.slice(this.identifier.length);
   }
 }
 
-class MultibaseBase58btc {
+class MultibaseBase58btc extends Codec {
   /**
    * Creates a new MultibaseBase58btc data codec.
    *
    * @returns {MultibaseBase58btc} A MultibaseBase58btc used to encode and
    *   decode Multibase base58btc values.
    */
-  constructor() {
+  constructor () {
+    super();
     this.identifier = new Uint8Array([0x7a]);
     this.algorithm = 'mb-base58-btc';
     this.name = 'base58-btc';
@@ -104,7 +115,7 @@ class MultibaseBase58btc {
    *
    * @returns {Uint8Array} The output of the encode function.
    */
-  encode(input) {
+  async encode (input: Uint8Array): Promise<Uint8Array> {
     return new Uint8Array(stringToUint8Array('z' + base58.encode(input)));
   }
 
@@ -116,7 +127,7 @@ class MultibaseBase58btc {
    *
    * @returns {Uint8Array} The output of the decode function.
    */
-  decode(input) {
+  decode (input: Uint8Array): Uint8Array {
     return base58.decode(new TextDecoder('utf-8').decode(input.slice(1)));
   }
 }

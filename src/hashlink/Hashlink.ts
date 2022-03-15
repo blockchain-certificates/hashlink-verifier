@@ -4,9 +4,28 @@
 'use strict';
 
 import * as cbor from 'borc';
-import {stringToUint8Array} from './util.js';
+import { stringToUint8Array } from './util.js';
+import { Codec } from './codecs';
+import { HashlinkModel } from '../models/Hashlink';
+
+export interface EncodeAPI {
+  data: Uint8Array;
+  urls?: string[];
+  codecs?: string[]; // TODO: use enum
+  meta?: {
+    [key: string]: any;
+  };
+}
+export interface VerifyAPI {
+  data: Uint8Array;
+  hashlink: string;
+}
 
 export class Hashlink {
+  public registeredCodecs: {
+    [key: string]: Codec;
+  };
+
   /**
    * Encodes a new Hashlink instance that can be used to encode or decode
    * data at URLs.
@@ -14,7 +33,7 @@ export class Hashlink {
    * @returns {Hashlink} A Hashlink used to encode and decode cryptographic
    *   hyperlinks.
    */
-  constructor() {
+  constructor () {
     this.registeredCodecs = {};
   }
 
@@ -35,39 +54,40 @@ export class Hashlink {
    *
    * @returns {Promise<string>} Resolves to a string that is a hashlink.
    */
-  async encode({data, urls, codecs= ['mh-sha2-256', 'mb-base58-btc'], meta = {}}) {
+  async encode ({ data, urls, codecs = ['mh-sha2-256', 'mb-base58-btc'], meta = {} }: EncodeAPI): Promise<string> {
     // ensure data or urls are provided
-    if(data === undefined && urls === undefined) {
+    if (data === undefined && urls === undefined) {
       throw new Error('Either `data` or `urls` must be provided.');
     }
 
     // ensure codecs are provided
-    if(codecs === undefined) {
+    if (codecs === undefined) {
       throw new Error('The hashlink creation `codecs` must be provided.');
     }
 
-    if(urls !== undefined) {
+    if (urls !== undefined) {
       // ensure urls are an array
-      if(!Array.isArray(urls)) {
+      if (!Array.isArray(urls)) {
         urls = [urls];
       }
 
       // ensure all URLs are strings
       urls.forEach(url => {
-        if(typeof url !== 'string') {
-          throw new Error(`URL "${url}" must be a string.`);
+        if (typeof url !== 'string') {
+          throw new Error(`URL "${(url as string)}" must be a string.`);
         }
       });
 
       // merge meta options with urls
-      meta = {...meta, url: urls};
+      meta = { ...meta, url: urls };
     }
 
     // generate the encoded cryptographic hash
+    // @ts-expect-error: I don't understand the original code so I can't fix it from Typescript perspective. Run tests to see how we can clarify.
     const outputData = await codecs.reduce(async (output, codec) => {
       const encoder = this.registeredCodecs[codec];
-      if(encoder === undefined) {
-        throw new Error(`Unknown cryptographic hash encoder "${encoder}".`);
+      if (encoder === undefined) {
+        throw new Error(`Unknown cryptographic hash encoder "${codec}".`);
       }
 
       return encoder.encode(await output);
@@ -75,29 +95,29 @@ export class Hashlink {
 
     // generate the encoded metadata
     const metadata = new Map();
-    if(meta.url) {
+    if (meta.url) {
       metadata.set(0x0f, meta.url);
     }
-    if(meta['content-type']) {
+    if (meta['content-type']) {
       metadata.set(0x0e, meta['content-type']);
     }
-    if(meta.experimental) {
+    if (meta.experimental) {
       metadata.set(0x0d, meta.experimental);
     }
-    if(meta.transform) {
+    if (meta.transform) {
       metadata.set(0x0c, meta.transform);
     }
 
     // build the hashlink
     const textDecoder = new TextDecoder();
-    let hashlink = 'hl:' + textDecoder.decode(outputData);
+    let hashlink: string = 'hl:' + textDecoder.decode(outputData as unknown as BufferSource); // TODO: clean this up
 
     // append meta data if present
-    if(metadata.size > 0) {
+    if (metadata.size > 0) {
       const baseEncodingCodec = codecs[codecs.length - 1];
       const cborData = new Uint8Array(cbor.encode(metadata));
       const mbCborData = textDecoder.decode(
-        this.registeredCodecs[baseEncodingCodec].encode(cborData));
+        await this.registeredCodecs[baseEncodingCodec].encode(cborData));
       hashlink += ':' + mbCborData;
     }
 
@@ -113,20 +133,20 @@ export class Hashlink {
    *
    * @returns {Object} Returns an object with the decoded hashlink values.
    */
-  async decode({hashlink}) {
+  async decode ({ hashlink }: { hashlink: string }): Promise<HashlinkModel> {
     const components = hashlink.split(':');
-    const decodedValue = {
+    const decodedValue: HashlinkModel = {
       hashName: 'unknown',
-      hashValue: 'unknown',
+      hashValue: null,
       meta: {}
-    }
+    };
 
-    if(components.length < 2) {
+    if (components.length < 2) {
       throw new Error(`Hashlink "${hashlink}" is invalid; ` +
         'it must contain at least one colon.');
     }
 
-    if(components.length > 3) {
+    if (components.length > 3) {
       throw new Error(`Hashlink "${hashlink}" is invalid; ` +
         'it contains more than two colons.');
     }
@@ -136,32 +156,28 @@ export class Hashlink {
     const multibaseDecoder = this._findDecoder(multibaseEncodedMultihash);
     const encodedMultihash = multibaseDecoder.decode(multibaseEncodedMultihash);
 
-    // determine the multihash decoder
-    const multihashDecoder = this._findDecoder(encodedMultihash);
-
     // decode the cryptographic hash name and value
     const hashDecoder = this._findDecoder(encodedMultihash);
     decodedValue.hashName = hashDecoder.name;
-    decodedValue.hashValue = await hashDecoder.decode(encodedMultihash);
+    decodedValue.hashValue = hashDecoder.decode(encodedMultihash);
 
     // extract the metadata to discover extra codecs
-    const codecs = [];
-    if(components.length === 3) {
+    if (components.length === 3) {
       const encodedMeta = stringToUint8Array(components[2]);
       const cborMeta = multibaseDecoder.decode(encodedMeta);
       const meta = cbor.decode(cborMeta);
 
       // extract metadata values
-      if(meta.has(0x0f)) {
+      if (meta.has(0x0f)) {
         decodedValue.meta.url = meta.get(0x0f);
       }
-      if(meta.has(0x0e)) {
+      if (meta.has(0x0e)) {
         decodedValue.meta['content-type'] = meta.get(0x0e);
       }
-      if(meta.has(0x0d)) {
+      if (meta.has(0x0d)) {
         decodedValue.meta.experimental = meta.get(0x0d);
       }
-      if(meta.has(0x0c)) {
+      if (meta.has(0x0c)) {
         decodedValue.meta.transform = meta.get(0x0c);
       }
     }
@@ -175,17 +191,13 @@ export class Hashlink {
    * @param {Object} options - The options for the encode operation.
    * @param {string} options.hashlink - The encoded hashlink value to verify.
    * @param {string} options.data - The data to use for the hashlink.
-   * @param {Array} options.resolvers - An array of Objects with key-value
-   *   pairs. Each object must contain a `scheme` key associated with a
-   *   Function({url, options}) that resolves any URL with the given scheme
-   *   and options to data.
    *
    * @returns {Promise<boolean>} true if the hashlink is valid, false otherwise.
    */
-  async verify({data, hashlink, resolvers}) {
+  async verify ({ data, hashlink }: VerifyAPI): Promise<boolean> {
     const components = hashlink.split(':');
 
-    if(components.length > 3) {
+    if (components.length > 3) {
       throw new Error(`Hashlink "${hashlink}" is invalid; ` +
         'it contains more than two colons.');
     }
@@ -200,12 +212,12 @@ export class Hashlink {
 
     // extract the metadata to discover extra codecs
     const codecs = [];
-    if(components.length === 3) {
+    if (components.length === 3) {
       const encodedMeta = stringToUint8Array(components[2]);
       const cborMeta = multibaseDecoder.decode(encodedMeta);
       const meta = cbor.decode(cborMeta);
       // extract transforms if they exist
-      if(meta.has(0x0c)) {
+      if (meta.has(0x0c)) {
         codecs.push(...meta.get(0x0c));
       }
     }
@@ -214,7 +226,7 @@ export class Hashlink {
     codecs.push(multihashDecoder.algorithm, multibaseDecoder.algorithm);
 
     // generate the hashlink
-    const generatedHashlink = await this.encode({data, codecs});
+    const generatedHashlink = await this.encode({ data, codecs });
     const generatedComponents = generatedHashlink.split(':');
 
     // check to see if the encoded hashes match
@@ -230,7 +242,7 @@ export class Hashlink {
    *   and a .decode() method. It must also have an `identifier` and
    *   `algorithm` property.
    */
-  use(codec) {
+  use (codec: Codec): void {
     this.registeredCodecs[codec.algorithm] = codec;
   }
 
@@ -242,11 +254,11 @@ export class Hashlink {
    * @returns A registered decoder that can be used to encode/decode the byte
    *   stream.
    */
-  _findDecoder(bytes) {
+  _findDecoder (bytes: Uint8Array): Codec {
     const decoders = Object.values(this.registeredCodecs);
     const decoder = decoders.find(
       decoder => decoder.identifier.every((id, i) => id === bytes[i]));
-    if(!decoder) {
+    if (!decoder) {
       throw new Error('Could not determine decoder for: ' + bytes);
     }
     return decoder;
