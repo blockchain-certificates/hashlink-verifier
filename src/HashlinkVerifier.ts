@@ -1,6 +1,6 @@
 import { Hashlink } from './hashlink/Hashlink';
 import * as codecs from './hashlink/codecs';
-import { HashlinkModel } from './models/Hashlink';
+import type { HashlinkModel } from './models/Hashlink';
 
 export class HashlinkVerifier {
   private readonly hl: Hashlink;

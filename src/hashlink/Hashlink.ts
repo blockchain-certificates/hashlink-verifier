@@ -5,8 +5,8 @@
 
 import * as cbor from 'borc';
 import { stringToUint8Array } from './util';
-import { Codec } from './codecs';
-import { HashlinkModel } from '../models/Hashlink';
+import type { Codec } from './codecs';
+import type { HashlinkModel } from '../models/Hashlink';
 
 export interface EncodeAPI {
   data: Uint8Array;
