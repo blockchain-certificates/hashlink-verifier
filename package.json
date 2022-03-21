@@ -11,7 +11,7 @@
     "dts:bundle": "dts-bundle-generator -o ./lib/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
-    "test": "jest",
+    "test": "jest --setupTestFrameworkScriptFile=./test/setupTests.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --maxWorkers=4 --silent --noStackTrace --coverage",
     "test:coverage:report": "codecov",
