@@ -5,7 +5,7 @@
 
 import * as base58 from '../base58-universal/main';
 import { blake2b } from 'blakejs';
-import crypto from './crypto-browser';
+import crypto from './crypto';
 import { stringToUint8Array } from './util';
 
 export abstract class Codec {
