@@ -3,7 +3,7 @@
   "version": "0.0.0-dev",
   "description": "Handling hashlinks in Blockcerts",
   "main": "lib/cjs/HashlinkVerifier.js",
-  "module": "lib/esm/HashlinkVerifier.js",
+  "import": "lib/esm/HashlinkVerifier.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "compile": "npm run clean:build && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && npm run dts:bundle",
