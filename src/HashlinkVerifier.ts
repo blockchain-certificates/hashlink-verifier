@@ -20,7 +20,6 @@ export class HashlinkVerifier {
    * @param {function} onHashlinkUrlDecoded: a callback function called when the source url has been discovered to enable
    * early manipulation (ie: update image in DOM).
    */
-
   async decode (hashlink: string, onHashlinkUrlDecoded?: (url: string) => void): Promise<HashlinkModel> {
     const decodedHashlink: HashlinkModel = await this.hl.decode({ hashlink });
     // console.log('hashlink decoded', decodedHashlink);
@@ -48,7 +47,6 @@ export class HashlinkVerifier {
    * @param {string} hashlink: the hashlink to be decoded. It will lookup in the previously decoded hashlinks table.
    * if not found it will decode the hashlink before verification.
    */
-
   async verify (hashlink: string): Promise<boolean> {
     const sourceUrl = await this.getSourceUrlFromHashlink(hashlink);
     let imageData;
@@ -70,6 +68,10 @@ export class HashlinkVerifier {
       throw new Error(`Hashlink ${hashlink} does not match data from url ${sourceUrl}`);
     }
     return verified;
+  }
+
+  hasHashlinksToVerify (): boolean {
+    return Object.keys(this.hashlinkTable).length > 0;
   }
 
   private async getSourceUrlFromHashlink (hashlink: string): Promise<string> {
