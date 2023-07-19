@@ -1,0 +1,15 @@
+test/
+config/
+
+index.html
+*.yml
+*.config.js
+tsconfig.*
+.gitignore
+.eslint*
+.husky/
+.babelrc
+.nvmrc
+.github/
+
+.idea
