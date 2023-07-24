@@ -3,7 +3,7 @@
  */
 'use strict';
 
-import cbor from 'cbor';
+import cbor from 'borc';
 import { stringToUint8Array } from './util';
 import type { Codec } from './codecs';
 import type { HashlinkModel } from '../models/Hashlink';
