@@ -62,7 +62,7 @@
   "dependencies": {
     "@trust/webcrypto": "^0.9.2",
     "blakejs": "^1.1.1",
-    "borc": "^3.0.0"
+    "cbor-web": "^9.0.1"
   },
   "peerDependencies": {
     "@trust/webcrypto": "^0.9.2",
