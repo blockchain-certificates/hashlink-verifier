@@ -1,3 +1,4 @@
+import { it, describe, expect, beforeEach, afterEach } from 'vitest';
 import { HashlinkVerifier } from '../src/HashlinkVerifier';
 
 const fixture = 'hl:zQmR7NGj4Lvqz18qubNdcFxDAG3thfKEHMGNu77FMHUHfuT:zBDkTKnBtUAv5HEo4G6JJ53mucK3cuo4XAhzwYirGBYASgPWkmGFtAx3FdDT8Lb8iNVDfcqjVkSM1yfrN1wSPeDmom5RkRzuZjvoqnD1o5tNMwfS7dBv2h4xUMjyEwJPeasyz6YNTKEe1JD55U5Uv14GjCq6E';
