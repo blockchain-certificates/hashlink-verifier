@@ -2,8 +2,8 @@
  * Copyright (c) 2019 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
-
-import * as base58 from '../base58-universal/main';
+// @ts-expect-error not a TS package
+import * as base58 from 'base58-universal';
 import { blake2b } from 'blakejs';
 import crypto from './crypto';
 import { stringToUint8Array } from './util';

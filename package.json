@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@trust/webcrypto": "^0.9.2",
+    "base58-universal": "^2.0.0",
     "blakejs": "^1.1.1",
     "cbor-web": "^9.0.1"
   },
