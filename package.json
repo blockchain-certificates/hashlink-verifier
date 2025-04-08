@@ -2,11 +2,10 @@
   "name": "@blockcerts/hashlink-verifier",
   "version": "0.0.0-dev",
   "description": "Handling hashlinks in Blockcerts",
-  "main": "lib/cjs/HashlinkVerifier.js",
-  "import": "lib/esm/HashlinkVerifier.js",
+  "main": "lib/esm/HashlinkVerifier.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "compile": "npm run clean:build && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && npm run dts:bundle",
+    "compile": "npm run clean:build && tsc -p tsconfig.json && npm run dts:bundle",
     "clean:build": "rimraf lib",
     "dts:bundle": "dts-bundle-generator -o ./lib/index.d.ts --project tsconfig.json --no-banner src/HashlinkVerifier.ts",
     "lint": "eslint . --ext .ts",
