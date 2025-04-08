@@ -1,9 +1,10 @@
-test/
+tests/
+src/
 config/
 
 index.html
 *.yml
-*.config.js
+*.config.*
 tsconfig.*
 .gitignore
 .eslint*
@@ -13,3 +14,4 @@ tsconfig.*
 .github/
 
 .idea
+
