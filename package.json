@@ -14,7 +14,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --silent --coverage.enabled",
     "test:coverage:report": "codecov",
-    "semantic-release": "semantic-release"
+    "semantic-release": "npx semantic-release"
   },
   "repository": {
     "type": "git",
@@ -44,7 +44,6 @@
     "eslint": "^9.23.0",
     "husky": "^9.1.7",
     "rimraf": "^6.0.1",
-    "semantic-release": "^24.2.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0",
     "vitest": "^3.1.1"
