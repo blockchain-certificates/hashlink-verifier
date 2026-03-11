@@ -13,8 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --silent --coverage.enabled",
-    "test:coverage:report": "codecov",
-    "semantic-release": "semantic-release"
+    "test:coverage:report": "npx codecov -f coverage/lcov.info",
+    "semantic-release": "npx semantic-release"
   },
   "repository": {
     "type": "git",
@@ -39,24 +39,20 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "codecov": "^3.8.3",
     "dts-bundle-generator": "^9.5.1",
     "eslint": "^9.23.0",
     "husky": "^9.1.7",
     "rimraf": "^6.0.1",
-    "semantic-release": "^24.2.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0",
-    "vitest": "^3.1.1"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@trust/webcrypto": "^0.9.2",
     "base58-universal": "^2.0.0",
     "blakejs": "^1.1.1",
     "cbor-web": "^10.0.3"
   },
   "peerDependencies": {
-    "@trust/webcrypto": "^0.9.2",
     "blakejs": "^1.1.1"
   }
 }
