@@ -40,7 +40,7 @@
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "dts-bundle-generator": "^9.5.1",
-    "eslint": "^9.23.0",
+    "eslint": "^10.2.0",
     "husky": "^9.1.7",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.2",
